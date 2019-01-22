@@ -4,18 +4,44 @@
 		<meta charset="UTF-8">
 		<title>Cellular Automata</title>
 		<link rel="stylesheet" href="styles/style.css">
-		
 	</head>
 
-	<body onload="start()">
+	<body onload="loadGame()">
+		
+		<div id = "loading-container">
+			<div id = "loading-art">
+				loading...
+			</div>
+		</div>
 		
 		<div id = "main-container">
+		
 			<canvas id = "main-canvas"></canvas>
+			
+			<div id = "start-container">
+				<h3>Welcome to Evermind</h3>
+				<p>Lorem ipsum</p>
+				<p>Lorem ipsum</p>
+				<br>
+				<p>Press any button to start</p>
+			</div>
+			
+			<div id = "info-container">Test</div>
+			
 		</div>
+		
+		
+		<audio id = "main-loop" src="audio/main_loop.mp3" type="audio/mp3">
+			Your web browser does not support HTML5 audio, please update your browser.
+		</audio>
 		
 		<script src = "scripts/main.js"></script>
 		<script src = "scripts/map_generator.js"></script>
-	
+		<script src = "scripts/public_variables.js"></script>
+		<script src = "scripts/input_handler.js"></script>
+		<script src = "scripts/audio_handler.js"></script>
+		<script src = "scripts/graphics_handler.js"></script>
+		
 	</body>
 
 </html>

@@ -1,19 +1,117 @@
-// Generates a map and stores it in an array
-
-/* NOTES
-	All arrays are listed in row / column ordering. ie, select a row and read a value in that row.
+/*
+Generates a map and stores it in an array
 */
 
 // CONSTANTS
-var MAP_WIDTH = 64; // Map size is 8 * 8 (a byte expanded to make each bit a byte)
-var MAP_HEIGHT = MAP_WIDTH;
+var CROWDING_VALUE = 3;
+var SMOOTHIHNG_ITERATIONS = 2;
 
 // Variables
-var mainArray = [];
+var mapSeed;
+var mapRule;
 var holdingArray = [];
 
-var mapSeed = 165; // Integer value between 0 and 255
-var mapRule = 62; // Interger value between 0 and 255
+// MAIN FUNCTIONS
+var generateMap = function(seed, rule) {
+	mapSeed = seed;
+	mapRule = rule;
+	
+	// Convert seed and rule to binary strings
+	mapSeed = decToBin(mapSeed);
+	mapRule = decToBin(mapRule);
+	
+	// Initialise the main and holding arrays
+	for (var col = 0; col < MAP_WIDTH; col++) {
+		mainArray[col] = [];
+		for (var row = 0; row < MAP_HEIGHT;row++) {
+			mainArray[col][row] = 0;
+		}
+	}
+	
+	holdingArray = mainArray;
+	
+	fillArray();
+	
+	for (var smoothing = 0; smoothing < SMOOTHIHNG_ITERATIONS; smoothing++) {
+		smoothArray();
+	}
+	
+	// Draw a border around the main array	
+	for (var col = 0; col < MAP_WIDTH; col++) {
+		mainArray[col][0] = '1';
+		mainArray[col][MAP_HEIGHT - 1] = '1';
+	}
+	for (var row = 0; row < MAP_HEIGHT; row++) {
+		mainArray[0][row] = '1';
+		mainArray[MAP_WIDTH - 1][row] = '1';
+	}
+	
+	// Create Landing Pad (3 x 3 safe area so the player can always "land" in a map)
+	for (var landingPadX = -1; landingPadX < 2; landingPadX++) {
+		for (var landingPadY = -1; landingPadY < 2; landingPadY++) {
+			mainArray[startX + landingPadX][startY + landingPadY] = '0';
+		}
+	}
+	
+	// Fill the map from the landing pad to find where the player can go
+	floodFill(startX, startY);
+};
+
+var fillArray = function() {
+	// Expand seed
+	var firstLine = '';
+	for (var i = 0; i < 8; i++) {
+		var currentBit = mapSeed.charAt(i);
+		if (currentBit == '1') {
+			firstLine = firstLine + mapSeed;
+		} else {
+			firstLine = firstLine + '00000000';
+		}
+	}
+	// Fill first line of main array
+	for (var col = 0; col < MAP_WIDTH; col ++) {
+		mainArray[col][0] = firstLine.charAt(col);
+	}
+	
+	// Run elementary CA using the rule to fill the remainder of the main array
+	for (var row = 0; row < MAP_HEIGHT - 1; row++) {
+		for (var col = 0; col < MAP_WIDTH; col++) {
+			mainArray[col][row + 1] = checkNeighbours1D(col, row);
+		}
+	}
+	
+	holdingArray = mainArray;
+};
+
+// Iterate over the array using a basic smoothing function
+var smoothArray = function() {
+	
+	var cellNeighbourCount;
+	
+	for (var col = 0; col < MAP_WIDTH; col++) {
+		for (var row = 0; row < MAP_HEIGHT; row++) {
+			cellNeighbourCount = checkNeighbours2D(col, row);
+			var newCellValue = '0';
+			if (mainArray[col][row] == '0' && cellNeighbourCount > CROWDING_VALUE + 1) {
+				// Not active, but has enough neighbours to become active
+				newCellValue = '1';
+			} else if (mainArray[col][row] == '1' && cellNeighbourCount > CROWDING_VALUE) {
+				// Active and has enough neighbours to stay active
+				newCellValue = '1';
+			}
+			holdingArray[col][row] = newCellValue;
+		}
+	}
+	mainArray = holdingArray;
+};
+
+/*
+
+4) Create landing area
+4.1 - select the landing site
+4.2 - draw the landing pad in the main array
+4.3 - run an a* fill algorithm from the landing site in the main array
+*/
 
 // UTILITY FUNCTIONS
 // convert decimal integer to binary string
@@ -24,27 +122,27 @@ var decToBin = function(val) {
 		val = (val - val % 2)/2;
 	}
 	bits.reverse();
-	return bits.join("");
+	return bits.join('');
 };
 
 // Check the state of the neighbours and return a result based on the map rule
-var checkNeighbours1D = function(row,col) {
+var checkNeighbours1D = function(col, row) {
 	
 	// Set default values for this cell and it's neighbours
-	var thisCell = mainArray[row][col];
-	var leftCell = "0";
-	var rightCell = "0";
+	var thisCell = mainArray[col][row];
+	var leftCell = '0';
+	var rightCell = '0';
 	
 	// Set actual values for the neighbours
 	if (col == 0) {
-		leftCell = "0";
-		rightCell = mainArray[row][col + 1];
+		leftCell = '0';
+		rightCell = mainArray[col + 1][row];
 	} else if (col == MAP_WIDTH - 1) {
-		leftCell = mainArray[row][col - 1];
-		rightCell = "0";
+		leftCell = mainArray[col - 1][row];
+		rightCell = '0';
 	} else {
-		leftCell = mainArray[row][col - 1];
-		rightCell = mainArray[row][col + 1];
+		leftCell = mainArray[col - 1][row];
+		rightCell = mainArray[col + 1][row];
 	}
 	
 	// Convert cell values to integers
@@ -58,64 +156,58 @@ var checkNeighbours1D = function(row,col) {
 	return mapRule.charAt(returnCharAt);
 };
 
-var getMap = function() {
-	return mainArray;
-};
-
-// MAIN FUNCTIONS
-var generateMap = function() {
-	// Convert seed and rule to binary strings
-	mapSeed = decToBin(mapSeed);
-	mapRule = decToBin(mapRule);
+// Check a cell's 8 neighbours and return a count of how many of those cells are active
+var checkNeighbours2D = function(col, row) {
 	
-	// Initialise the main and holding arrays
-	for (var row = 0; row < MAP_HEIGHT; row++) {
-		mainArray[row] = [];
-		for (var col = 0; col < MAP_WIDTH; col++) {
-			mainArray[row][col] = 0;
+	var neighbourCount = 0;
+	
+	for (var xCheck = -1; xCheck < 2; xCheck++) {
+		for (var yCheck = -1; yCheck < 2; yCheck++) {
+			var colCheck = col + xCheck;
+			var rowCheck = row + yCheck;
+			if (colCheck < 0) {
+				// Left edge, do nothing
+			} else if (colCheck > MAP_WIDTH - 1) {
+				// Right edge, do nothing
+			} else if (rowCheck < 0) {
+				// Top edge, do nothing
+			} else if (rowCheck > MAP_HEIGHT - 1) {
+				// Bottom edge, do nothing
+			} else {
+				if (mainArray[colCheck][rowCheck] == '1') {
+					neighbourCount++;
+				}
+			}
 		}
 	}
 	
-	holdingArray = mainArray;
-	
-	fillArray();
-	// smoothArray();
-	// createLandingArea();
+	return neighbourCount;
 };
 
-var fillArray = function() {
-	// Expand seed
-	var firstLine = "";
-	for (var i = 0; i < 8; i++) {
-		var currentBit = mapSeed.charAt(i);
-		if (currentBit == "1") {
-			firstLine = firstLine + mapSeed;
-		} else {
-			firstLine = firstLine + "00000000";
-		}
-	}
-	// Fill first line of main array
-	for (var col = 0; col < MAP_WIDTH; col ++) {
-		mainArray[0][col] = firstLine.charAt(col);
-	}
+// A* flood fill algorithm
+var floodFill = function(x, y) {
+	if (x < 0 || x == MAP_WIDTH || y < 0 || y == MAP_HEIGHT ) return;
+	if (alreadyFilled(x,y)) return;
 	
-	// Run elementary CA using the rule to fill the remainder of the main array
-	for (var row = 0; row < MAP_HEIGHT - 1; row++) {
-		for (var col = 0; col < MAP_WIDTH; col++) {
-			mainArray[row + 1][col] = checkNeighbours1D(row,col);
-		}
-	}
+	fill(x,y);
 	
-	// Draw a border around the main array	
+	floodFill(x, y - 1);
+	floodFill(x+1, y);
+	floodFill(x, y+1);
+	floodFill(x-1,y);
 };
 
-/*
-3) Smooth array
-3.1 - process each cell and store the results in the holding array
-3.2 - move the holding array values into the main array
+// Mark the specified cell as accessible
+var fill = function(x,y) {
+	mainArray[x][y] = '2';
+};
 
-4) Create landing area
-4.1 - select the landing site
-4.2 - draw the landing pad in the main array
-4.3 - run an a* fill algorithm from the landing site in the main array
-*/
+// Check if a cell in the array is either inaccessible or has already been checked
+var alreadyFilled = function(x,y) {
+  var tester = mainArray[x][y];
+  if (tester == '2' || tester == '1') {
+    return true;
+  } else {
+    return false;
+  }
+}

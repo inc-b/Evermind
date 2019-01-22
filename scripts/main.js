@@ -1,25 +1,41 @@
-var canvas;
-var pixelSize = 3;
+/*
+Main script
+*/
 
-var start = function() {
-	var ctx = document.getElementById('main-canvas');
-	canvas = ctx.getContext('2d');
-	canvas.canvas.width = 200;
-	canvas.canvas.height = 200;
-	generateMap();
-	render();
+// CONSTANTS
+
+// Variables
+
+var loadGame = function() {
+	generateMap(defaultSeed, defaultRule);
+	initialiseDisplay();
+	listenForInput();
+	startGame();
+	var updater = setInterval(update,1);
 };
 
-var render = function() {
-	canvas.fillStyle = "black";
-	for (var row = 0; row < 64; row++) {
-		for (var col = 0; col < 64; col++) {
-			var cellValue = mainArray[row][col];
-			if (cellValue == "1") {
-				canvas.fillRect(col * pixelSize,row * pixelSize,pixelSize,pixelSize);
-			}
-		}
+var startGame = function() {
+	document.getElementById('loading-container').style.display = 'none';
+	// jukebox();
+};
+
+var update = function() {
+	switch(gameState) {
+		case 'start':
+			// Display instructions etc
+			renderStart();
+			break;
+		case 'map':
+			// Display the navigation map
+			renderMap();
+			break;
+		case 'main':
+			// Display the local map
+			renderMain();
+			break;
+		case 'menu':
+			// Display the 'system' menu
+			renderMenu();
+			break;
 	}
-	canvas.fillStyle = "red";
-	canvas.fillRect(64 * pixelSize,64 * pixelSize, pixelSize, pixelSize);
 };
