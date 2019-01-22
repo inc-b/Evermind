@@ -13,7 +13,7 @@ var mainArray = []; // Holds the local map
 var defaultSeed = 16; // Math.floor(Math.random() * 255);
 var defaultRule = 165; //Math.floor(Math.random() * 255);
 
-var gameRunning = false;
+var gamePaused = false;
 
 var playerX = 32;
 var playerY = 32;
@@ -24,9 +24,6 @@ var startY = 32;
 Possible states:
 	main: display the local map and let the player walk around
 	map: display the system map and let the player navigate
-	start: display some general info 
-	menu: display the game 'system' menu
-	
-Game begins in the "start" state
+	menu: display the game menu
 */
-var gameState = 'start'; 
+var gameState = 'main'; 

@@ -18,29 +18,41 @@
 		
 			<canvas id = "main-canvas"></canvas>
 			
-			<div id = "start-container">
+			<div id = "info-container">
+				<div class = "nav-button" onclick="showMap()">Map</div>
+				<div class = "nav-button" onclick="showMenu()">Menu</div>
+			</div>
+		
+		</div>
+		
+		<div id = "start-container">
+			<div id = "start-container-body">
 				<h3>Welcome to Evermind</h3>
 				<p>Lorem ipsum</p>
 				<p>Lorem ipsum</p>
 				<br>
-				<p>Press any button to start</p>
+				<div id = "start-link" onclick="hideHelpScreen()">
+					CLICK HERE TO START
+				</div>
 			</div>
-			
-			<div id = "info-container">Test</div>
-			
 		</div>
+		
+
 		
 		
 		<audio id = "main-loop" src="audio/main_loop.mp3" type="audio/mp3">
 			Your web browser does not support HTML5 audio, please update your browser.
 		</audio>
 		
+		<script src = "scripts/utilities.js"></script>
 		<script src = "scripts/main.js"></script>
 		<script src = "scripts/map_generator.js"></script>
 		<script src = "scripts/public_variables.js"></script>
 		<script src = "scripts/input_handler.js"></script>
 		<script src = "scripts/audio_handler.js"></script>
 		<script src = "scripts/graphics_handler.js"></script>
+		<script src = "scripts/player_handler.js"></script>
+		<script src = "scripts/map_handler.js"></script>		
 		
 	</body>
 

@@ -1,5 +1,7 @@
-body {
-	background-color: dimgrey;
+html, body {
+	width: 100%;
+	height: 100%;
+	background-color: black;
 	color: white;
 	padding: 0%;
 	margin: auto;
@@ -13,7 +15,7 @@ body {
 	z-index: 100;
 	left: 0;
 	top: 0;
-	align: center;
+	text-align: center;
 }
 
 #loading-art {
@@ -25,29 +27,65 @@ body {
 }
 
 #main-container {
+	height: 100%;
+	width: 100%;
 	position: relative;
 	padding: 0%;
 	margin: auto;
 	border: 1px;
+	background-color: dimgrey;
+	color: white;
 }
 
 #main-canvas {
 }
 
 #start-container {
-	padding: 5%;
 	background-color: black;
 	position: absolute;
-	top: 5%;
-	left: 5%;
-	width: 80%;
-	height: 80%;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 110%;
 	text-align: center;
+	margin: auto;
+}
+
+#start-container-body {
+	background-color: dimgrey;
+	position: absolute;
+	padding: 5%;
+	width: 70%;
+	height: 50%;
+	top: 10%;
+	left: 10%;
+}
+
+#start-link {
+	position: relative;
+	left: 25%;
+	width: 40%;
+	height: 5%;
+	background-color: white;
+	color: black;
+	padding: 5%;
 }
 
 #info-container {
 	position: fixed;
-	background-color: red;
+	background-color: dimgrey;
+	width: 40%;
+	height: 100%;
+	left: 50%;
+	top: 0;
 	padding: 5%;
 }
 
+.nav-button{
+	background-color: yellow;
+	color: black;
+	border: 1%;
+	margin: 1%;
+	padding: 1%;
+	width: auto;
+}

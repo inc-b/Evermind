@@ -1,5 +1,9 @@
 /*
 Generates a map and stores it in an array
+Map values:
+	'0' = Inaccessible space
+	'1' = Wall
+	'2' = Accessible space
 */
 
 // CONSTANTS
@@ -103,26 +107,6 @@ var smoothArray = function() {
 		}
 	}
 	mainArray = holdingArray;
-};
-
-/*
-
-4) Create landing area
-4.1 - select the landing site
-4.2 - draw the landing pad in the main array
-4.3 - run an a* fill algorithm from the landing site in the main array
-*/
-
-// UTILITY FUNCTIONS
-// convert decimal integer to binary string
-var decToBin = function(val) {
-	var bits = [];
-	for (var i = 0; i < 8; i++) {
-		bits.push(val % 2);
-		val = (val - val % 2)/2;
-	}
-	bits.reverse();
-	return bits.join('');
 };
 
 // Check the state of the neighbours and return a result based on the map rule
