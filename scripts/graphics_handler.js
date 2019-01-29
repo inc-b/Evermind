@@ -11,7 +11,7 @@ var PLAYER_COLOUR = 'red';
 var BUTTON_COLOUR = 'blue';
 var BUTTON_TEXT = 'white';
 var MAIN_CANVAS_WIDTH = .5; // Width of the main display area as a ratio of the actual screen width
-var MAIN_CANVAS_ASPECT_RATIO = 1; // Height of the main display area as a ratio of the calculated display area width
+var MAIN_CANVAS_ASPECT_RATIO = .8; // Height of the main display area as a ratio of the calculated display area width
 var PIXEL_SIZE = 1; // Size modifier for pixels on the local map
 var MARGIN = 0.05; // Margin width as a percentage of screen width
 var FONT_SIZE = 0.05; // Font height as a percentage of screen height
@@ -22,9 +22,12 @@ var display;
 var screenWidth;
 var screenHeight;
 var pixelSize;
+var xOffset;
+var yOffset;
 
 // Setup the canvasses and adjust layout
 var initialiseDisplay = function() {
+	console.log("size");
 	// Calculate the screen size
 	screenWidth = Math.floor(window.innerWidth * MAIN_CANVAS_WIDTH);
 	screenHeight = Math.floor(screenWidth * MAIN_CANVAS_ASPECT_RATIO);
@@ -38,7 +41,11 @@ var initialiseDisplay = function() {
 	display.canvas.height = screenHeight;
 	
 	// Set the size of pixels based on the screen size
-	pixelSize = Math.floor(PIXEL_SIZE * (display.canvas.width / MAP_WIDTH));
+	pixelSize = Math.floor(PIXEL_SIZE * (screenHeight / MAP_WIDTH));
+	
+	// Set offsets to make sure things are drawn near the centre of the canvas
+	xOffset = Math.floor((screenWidth - (MAP_WIDTH * pixelSize)) / 2);
+	yOffset = Math.floor((screenHeight - (MAP_HEIGHT * pixelSize)) / 2);
 
 	// Set the default font size
 	document.getElementById('main-container').style.fontSize = Math.floor(screenHeight * FONT_SIZE) + 'px';
@@ -79,25 +86,25 @@ var renderMain = function() {
 			} else if (cellValue == '2') {
 				display.fillStyle = INACTIVE_CELL_COLOUR;
 			}
-			display.fillRect(col * pixelSize,row * pixelSize,pixelSize,pixelSize);
+			display.fillRect(xOffset + (col * pixelSize),yOffset + (row * pixelSize),pixelSize,pixelSize);
 		}
 	}
 	
 	// Place the player
 	display.fillStyle = PLAYER_COLOUR;
-	display.fillRect(playerX * pixelSize, playerY * pixelSize, pixelSize, pixelSize);
+	display.fillRect(xOffset + (playerX * pixelSize), yOffset + (playerY * pixelSize), pixelSize, pixelSize);
 };
 
 // Render the system map to the main canvas
 var renderMap = function() {
 	display.fillStyle = 'green';
-	display.fillRect(0,0,screenWidth,screenHeight / 2);
+	display.fillRect(xOffset,yOffset,screenWidth,screenHeight / 2);
 };
 
 // Render the menu to the main canvas
 var renderMenu = function() {
 	display.fillStyle = 'red';
-	display.fillRect(0,0,50,50);
+	display.fillRect(xOffset,yOffset,50,50);
 };
 
 // Render a button to the main canvas
@@ -114,4 +121,11 @@ var hideHelpScreen = function(){
 
 var showHelpScreen = function() {
 	document.getElementById('start-container').style.display = 'block';
+};
+
+var listenForResize = function() {
+	window.addEventListener('resize', initialiseDisplay, false);
+};
+
+var resizePage = function() {
 };
