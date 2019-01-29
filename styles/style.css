@@ -89,3 +89,25 @@ html, body {
 	padding: 1%;
 	width: auto;
 }
+
+.inactive-nav-button{
+	background-color: grey;
+	color: black;
+	border: 1%;
+	margin: 1%;
+	padding: 1%;
+	width: auto;
+}
+
+.controls-container{
+	background-color: white;
+	color: black;
+	border: 1%;
+	margin: 1%;
+	padding: 5%;
+	width: auto;
+}
+
+.info-spacer{
+	height:2%;
+}
