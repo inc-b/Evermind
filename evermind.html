@@ -19,8 +19,32 @@
 			<canvas id = "main-canvas"></canvas>
 			
 			<div id = "info-container">
-				<div class = "nav-button" onclick="showMap()">Map</div>
-				<div class = "nav-button" onclick="showMenu()">Menu</div>
+				<div class = "nav-button" id = "main-button" onclick="showMain()">Main</div>
+				<div class = "nav-button" id = "map-button" onclick="showMap()">Map</div>
+				<div class = "nav-button" id = "menu-button" onclick="showMenu()">Menu</div>
+
+				<div class = "info-spacer"></div>
+				
+				<div class = "controls-container" id = "main-controls">
+					Do a thing<br>
+					Do another thing<br>
+					These will be buttons<br>
+					And there should be a data readout<br>
+				</div>
+				
+				<div class = "controls-container" id = "map-controls">
+					Zoom in<br>
+					Zoom out<br>
+					Maybe another button<br>
+					What controls do you need on a map?<br>
+				</div>
+				
+				<div class = "controls-container" id = "menu-controls">
+					Save game<br>
+					Load game<br>
+					Music on/off toggle<br>
+					Credits<br>
+				</div>
 			</div>
 		
 		</div>
