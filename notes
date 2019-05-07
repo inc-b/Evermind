@@ -1,0 +1,4 @@
+Use Wolfenstein style 3d rendering to turn the 2d maps into traversable environments
+- Base wall height can be changed according to location and a noise map can add or remove some height for organic variation
+- Floor/ground and ceiling/sky colour set by location
+- Can walls be shaped using marching squares so the map isn't so blocky?
