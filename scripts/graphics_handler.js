@@ -58,6 +58,12 @@ var render = function() {
 	display.fillRect(0,0,screenWidth,screenHeight);
 
 	// Render graphics to the main canvas based on game's current state
+	// Three states right now:
+	// MAP - Renders the system map for navigation between locations
+	// MAIN - Renders the local map for movement
+	// MENU - Displays the game menu
+	//
+	// WOLF - Need to work on this fourth state for 3d rendering (like Wolfenstein, see ../notes)
 	switch(gameState) {
 		case 'map':
 			// Display the navigation map
@@ -70,6 +76,10 @@ var render = function() {
 		case 'menu':
 			// Display the 'system' menu
 			renderMenu();
+			break;
+		case 'wolf':
+			// Display a 3d render of the local environment
+			render3d();
 			break;
 	}
 };
@@ -106,6 +116,21 @@ var renderMenu = function() {
 	display.fillStyle = 'red';
 	display.fillRect(xOffset,yOffset,50,50);
 };
+
+// Render the local environment in 3d
+var render3d = function() {
+	// Outline: Sweep across the player's view angle, one pixel at a time, and cast a ray out to find visible objects. Render each ray as a vertical line
+	// Also needs to include fog for maximum view distance
+	// Once the environment is drawn, sprites need to be drawn too
+	for (var currentPixel = 0; currentPixel < screenWidth; currentPixel++) {
+		// Cast a ray out from the centre of the player and detect if it hits anything or reaches max view distance
+		// If something is hit, calculate what length of line to draw based on location details (wall height, cell height modifier, wall pixel height modifier)
+		// Calculate the distance from the player to work out where the base of the line should be
+		// Using the distance, length, and base colour (or slice of texture, if implemented) calculate the pixels of the line and store them in an array
+		// Draw the line from the array up from the base point
+	}
+};
+
 
 // Render a button to the main canvas
 var drawButton = function(xPos, yPos, buttonWidth, buttonHeight, buttonText) {
