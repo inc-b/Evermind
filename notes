@@ -1,4 +1,11 @@
-Use Wolfenstein style 3d rendering to turn the 2d maps into traversable environments
-- Base wall height can be changed according to location and a noise map can add or remove some height for organic variation
-- Floor/ground and ceiling/sky colour set by location
+Use Wolfenstein style 3d rendering to turn the 2d maps into traversable environments (see https://www.youtube.com/watch?v=eOCQfxRQ2pY)
+
+NOTES
+- Base wall height can be changed according to location and a noise map can add or remove some height for organic variation. Further variation possible by adjusting the length of each line drawn. Fast, repeatable methods needed for each.
+- Floor/ground and ceiling/sky colour set by location.
+- Fogging will be needed so there's a maximum draw distance. Is exponential or linear fall off best? Fog level should change per location
+
+ROADMAP
+- Sky/ceiling and ground/floor textures
+- Wall textures. Procedural generation is probably not a good idea but each location would need multiple textures and a procedural way to apply them, which is a huge amount of work
 - Can walls be shaped using marching squares so the map isn't so blocky?
